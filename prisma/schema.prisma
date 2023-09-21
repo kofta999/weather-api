@@ -10,4 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  email                String    @unique
+  hashedPassword       String
+  savedLocations       String[]
+}
 
