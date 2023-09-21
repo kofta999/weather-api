@@ -5,7 +5,12 @@ export function WeatherHome(user: any) {
     <div>
       <h3>Welcome {user.name} </h3>
       <p>Here's your weather cards for your saved locations:</p>
-      {/* add cards here */}
+      <div
+        hx-get="/weather/city"
+        hx-trigger="load"
+        hx-target="closest div"
+        hx-swap="outerHTML"
+      ></div>
       <p>
         Want to add more cities? <br /> use this form here
       </p>

@@ -4,7 +4,7 @@ export function WeatherForm() {
   return (
     <form
       hx-post="/weather/city"
-      hx-swap="afterend"
+      hx-swap="beforebegin"
       _="on submit target.reset()"
     >
       <input type="text" name="city" />
