@@ -2,15 +2,17 @@ import { Elysia, t } from "elysia";
 import { db } from "../libs/prisma";
 import { setup } from "../libs/setup";
 import { authModel } from "../models/auth.model";
-import { ErrorMessage } from "../components/ErrorMessage";
 import { BaseHtml } from "../components/BaseHtml";
 import { SignupForm } from "../components/Auth/SignupForm";
 import { LoginForm } from "../components/Auth/LoginForm";
+import { html } from "@elysiajs/html";
+import { isAuthenticated } from "../middlewares/auth.middleware";
 // import sgMail from "@sendgrid/mail";
 
 // sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
 export const authModule = new Elysia()
+  .use(html())
   .use(authModel)
   .use(setup)
   .get("signup", () => (
@@ -26,7 +28,6 @@ export const authModule = new Elysia()
   .post(
     "signup",
     async ({ body, set }) => {
-      console.log("here");
       const { name, email, password } = body;
       const existingUser = await db.user.findUnique({
         where: { email },
@@ -35,7 +36,7 @@ export const authModule = new Elysia()
       if (existingUser) {
         set.status = 400;
         set.redirect = "/login";
-        return <ErrorMessage />;
+        throw new Error("User already exists, please log in");
       }
       const hashedPassword = await Bun.password.hash(password);
       const newUser = await db.user.create({
@@ -63,7 +64,7 @@ export const authModule = new Elysia()
       });
       if (!existingUser) {
         set.status = 404;
-        return <ErrorMessage />;
+        throw new Error("User not found");
       }
       const checkPassword = await Bun.password.verify(
         password,
@@ -71,7 +72,7 @@ export const authModule = new Elysia()
       );
       if (!checkPassword) {
         set.status = 401;
-        return <ErrorMessage />;
+        throw new Error("Password incorrect");
       }
 
       const accessToken = await jwt.sign({ userId: existingUser.id });
@@ -80,10 +81,15 @@ export const authModule = new Elysia()
         value: accessToken,
       });
 
-      set.redirect = "/weather/home"
+      set.redirect = "/weather";
       return <h1>Logged In</h1>;
     },
     {
       body: "login",
     }
-  );
+  )
+  .use(isAuthenticated)
+  .post("/logout", ({ set, cookie: { access_token } }) => {
+    access_token.remove();
+    set.redirect = "/login";
+  });

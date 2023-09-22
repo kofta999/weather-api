@@ -2,7 +2,7 @@ import { WeatherForm } from "./WeatherForm";
 
 export function WeatherHome(user: any) {
   return (
-    <div>
+    <div class="home">
       <h3>Welcome {user.name} </h3>
       <p>Here's your weather cards for your saved locations:</p>
       <div

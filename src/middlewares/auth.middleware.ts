@@ -1,11 +1,10 @@
 import { Elysia } from "elysia";
 import { setup } from "../libs/setup";
 import { db } from "../libs/prisma";
-import { ErrorMessage } from "../components/ErrorMessage";
 
-export const isAuthenticated = new Elysia().derive(
-  async ({ jwt, cookie: { access_token }, set }: any) => {
-    if (!access_token) {
+export const isAuthenticated = new Elysia().use(setup).derive(
+  async ({ jwt, cookie: { access_token }, set }) => {
+    if (!access_token.value) {
       set.status = 401;
       throw new Error("Access token is not provided")
     }

@@ -1,19 +1,16 @@
 import { Elysia, t } from "elysia";
-import axios from "axios";
-import { WeatherCard } from "../components/Weather/WeatherCard";
-import { ErrorMessage } from "../components/ErrorMessage";
-import { WeatherForm } from "../components/Weather/WeatherForm";
-import { BaseHtml } from "../components/BaseHtml";
-import { isAuthenticated } from "../middlewares/auth.middleware";
-import { WeatherHome } from "../components/Weather/WeatherHome";
 import { db } from "../libs/prisma";
+import { isAuthenticated } from "../middlewares/auth.middleware";
+import { BaseHtml } from "../components/BaseHtml";
+import { WeatherCard } from "../components/Weather/WeatherCard";
+import { WeatherHome } from "../components/Weather/WeatherHome";
 import { WeatherList } from "../components/Weather/WeatherList";
+import { fetchWeather } from "../libs/fetchWeather";
 
-const weatherApiUrl = process.env.WEATHER_API_URL!;
 
 export const weatherModule = new Elysia({ prefix: "/weather" })
   .use(isAuthenticated)
-  .get("/", async ({ user }) => {
+  .get("/", ({ user }) => {
     return (
       <BaseHtml>
         <WeatherHome {...user} />
@@ -22,19 +19,7 @@ export const weatherModule = new Elysia({ prefix: "/weather" })
   })
   .get("/city", async ({ user }) => {
     const cities = user.savedLocations;
-    const citiesData = await Promise.all(
-      cities.map(async (city) => {
-        const url = `${weatherApiUrl}/current.json?q=${city}`;
-        const response = await axios.get(url, {
-          params: {
-            key: process.env.WEATHER_API_KEY!,
-          },
-        });
-        if (response.status === 200) {
-          return response.data;
-        }
-      })
-    );
+    const citiesData = await Promise.all(cities.map(fetchWeather));
     return <WeatherList citiesData={citiesData} />;
   })
   .post(
@@ -42,21 +27,12 @@ export const weatherModule = new Elysia({ prefix: "/weather" })
     async ({ body, user }) => {
       const userId = user.id;
       const { city } = body;
-      const url = `${weatherApiUrl}/current.json?q=${city}`;
       await db.user.update({
         where: { id: userId },
         data: { savedLocations: { push: city } },
       });
-      const response = await axios.get(url, {
-        params: {
-          key: process.env.WEATHER_API_KEY!,
-        },
-      });
-      if (response.status === 200) {
-        return <WeatherCard {...response.data} />;
-      } else {
-        return <ErrorMessage />;
-      }
+      const data = await fetchWeather(city);
+      return <WeatherCard {...data} />;
     },
     { body: t.Object({ city: t.String() }) }
   );

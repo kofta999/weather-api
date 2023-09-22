@@ -12,6 +12,25 @@ export const BaseHtml = compile(({ children }: Html.PropsWithChildren) => (
       <script src="https://unpkg.com/hyperscript.org@0.9.11"></script>
       <title>Weather</title>
     </head>
+    <nav>
+      <ul>
+        <li>
+          <a href="/weather">Home</a>
+        </li>
+        <li>
+          <a href="/login">Login</a>
+        </li>
+        <li>
+          <a href="/signup">Signup</a>
+        </li>
+        <li>
+          <form action="/logout" method="post">
+            {" "}
+            <button type="submit">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
     {children}
   </html>
 ));

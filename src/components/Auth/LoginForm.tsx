@@ -1,6 +1,6 @@
 export function LoginForm() {
   return (
-    <form hx-post="/login" hx-swap="outerHTML" hx-replace-url="true">
+    <form class="loginForm" hx-post="/login" hx-swap="outerHTML" hx-select=".home" hx-replace-url="true">
       <br />
       <label>
         Email:

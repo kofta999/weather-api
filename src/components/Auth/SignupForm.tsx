@@ -1,6 +1,6 @@
 export function SignupForm() {
   return (
-    <form hx-post="/signup" hx-swap="outerHTML" hx-replace-url="true">
+    <form hx-post="/signup" hx-swap="outerHTML" hx-replace-url="true" hx-select=".loginForm">
       <label>
         Name:
         <input type="text" name="name" />
