@@ -7,7 +7,6 @@ import { WeatherHome } from "../components/Weather/WeatherHome";
 import { WeatherList } from "../components/Weather/WeatherList";
 import { fetchWeather } from "../libs/fetchWeather";
 
-
 export const weatherModule = new Elysia({ prefix: "/weather" })
   .use(isAuthenticated)
   .get("/", ({ user }) => {
@@ -27,12 +26,20 @@ export const weatherModule = new Elysia({ prefix: "/weather" })
     async ({ body, user }) => {
       const userId = user.id;
       const { city } = body;
+      const data = await fetchWeather(city);
       await db.user.update({
         where: { id: userId },
-        data: { savedLocations: { push: city } },
+        data: { savedLocations: { push: data.location.name } },
       });
-      const data = await fetchWeather(city);
       return <WeatherCard {...data} />;
     },
     { body: t.Object({ city: t.String() }) }
-  );
+  )
+  .delete("/city/:cityName", async ({ params, user }) => {
+    const { cityName } = params;
+    const newCities = user.savedLocations.filter((city) => city !== cityName);
+    await db.user.update({
+      where: { id: user.id },
+      data: { savedLocations: { set: newCities } },
+    });
+  });

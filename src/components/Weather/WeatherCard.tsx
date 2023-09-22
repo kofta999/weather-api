@@ -14,7 +14,7 @@ export function WeatherCard(props: any) {
       <small>Last Updated: {props.current.last_updated}</small>
       <footer>
         <button
-          hx-delete={`/city/${props.location.name}`}
+          hx-delete={`/weather/city/${props.location.name}`}
           hx-swap="outerHTML"
           hx-target="closest article"
           class="secondary"
