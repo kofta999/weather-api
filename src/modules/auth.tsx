@@ -35,7 +35,7 @@ export const authModule = new Elysia()
       });
       if (existingUser) {
         set.status = 400;
-        set.redirect = "/login";
+        set.headers["HX-Redirect"] = "/login";
         throw new Error("User already exists, please log in");
       }
       const hashedPassword = await Bun.password.hash(password);
@@ -46,8 +46,8 @@ export const authModule = new Elysia()
           hashedPassword,
         },
       });
-      set.redirect = "/login";
-      return <h1>created user successfully</h1>;
+      set.headers["HX-Redirect"] = "/login";
+      // return <h1>created user successfully</h1>;
     },
     {
       body: "signup",
@@ -81,8 +81,8 @@ export const authModule = new Elysia()
         value: accessToken,
       });
 
-      set.redirect = "/weather";
-      return <h1>Logged In</h1>;
+      set.headers["HX-Redirect"] = "/weather";
+      // return <h1>Logged In</h1>;
     },
     {
       body: "login",
@@ -91,5 +91,6 @@ export const authModule = new Elysia()
   .use(isAuthenticated)
   .post("/logout", ({ set, cookie: { access_token } }) => {
     access_token.remove();
-    set.redirect = "/login";
+    // set.headers["HX-Redirect"] = "/login";
+    set.headers["HX-Redirect"] = "/login"
   });

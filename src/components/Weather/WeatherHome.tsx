@@ -11,9 +11,6 @@ export function WeatherHome(user: any) {
         hx-target="closest div"
         hx-swap="outerHTML"
       ></div>
-      <p>
-        Want to add more cities? <br /> use this form here
-      </p>
       <WeatherForm />
     </div>
   );

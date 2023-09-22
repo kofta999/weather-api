@@ -7,8 +7,19 @@ export function WeatherForm() {
       hx-swap="beforebegin"
       _="on submit target.reset()"
     >
-      <input type="text" name="city" />
-      <button type="submit">Add City</button>
+      <div>
+        <input
+          style="width: 35%"
+          type="text"
+          name="city"
+          placeholder="City name"
+        />
+      </div>
+      <div>
+        <button style="width: 35%" type="submit">
+          Add City
+        </button>
+      </div>
     </form>
   );
 }

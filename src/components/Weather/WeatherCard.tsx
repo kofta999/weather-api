@@ -2,17 +2,26 @@
 
 export function WeatherCard(props: any) {
   return (
-    <div>
-      <h3>
-        Weather for {props.location.name}, {props.location.region}, Located in{" "}
+    <article>
+      <header>
+        {props.location.name} ({props.location.region}),{" "}
         {props.location.country}
-      </h3>
+      </header>
       <p>
-        Temprature is now {props.current.temp_c}°C ,
-        {props.current.condition.text}, at{" "}
+        {props.current.temp_c}°C , {props.current.condition.text} at{" "}
         {props.current.is_day === 1 ? "Day" : "Night"}
       </p>
-      <p>Last Updated: {props.current.last_updated}</p>
-    </div>
+      <small>Last Updated: {props.current.last_updated}</small>
+      <footer>
+        <button
+          hx-delete={`/city/${props.location.name}`}
+          hx-swap="outerHTML"
+          hx-target="closest article"
+          class="secondary"
+        >
+          Remove City
+        </button>
+      </footer>
+    </article>
   );
 }
