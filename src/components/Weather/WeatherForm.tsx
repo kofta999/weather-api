@@ -3,6 +3,7 @@
 export function WeatherForm() {
   return (
     <form
+      hx-boost="true"
       hx-post="/weather/city"
       hx-swap="beforebegin"
       _="on submit target.reset()"

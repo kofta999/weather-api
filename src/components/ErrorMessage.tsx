@@ -1,10 +1,10 @@
 import { BaseHtml } from "./BaseHtml";
 
-export function ErrorMessage(error: string) {
-  return (
-    <BaseHtml>
-      <h1>An Error has occured, try refreshing the page.</h1>
-      <p>Error message: {error}</p>
-    </BaseHtml>
-  )
-}
+export const ErrorMessage = (error: any) => (
+  <BaseHtml>
+  <div class="errorMessage">
+  <h5>An Error has occured, try refreshing the page.</h5>
+    <small>Error message: {error}</small>
+  </div>
+  </BaseHtml>
+);

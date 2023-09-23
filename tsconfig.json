@@ -3,6 +3,7 @@
     "jsx": "react",
     "jsxFactory": "Html.createElement",
     "jsxFragmentFactory": "Html.Fragment",
+    // Plugin to add XSS warnings and alerts.
     "plugins": [
       {
         "name": "@kitajs/ts-html-plugin"

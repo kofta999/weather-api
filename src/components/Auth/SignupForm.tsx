@@ -1,6 +1,12 @@
 export function SignupForm() {
   return (
-    <form hx-post="/signup" hx-swap="outerHTML" hx-replace-url="true" hx-select=".loginForm">
+    <form
+      hx-boost="true"
+      hx-post="/signup"
+      hx-swap="beforebegin"
+      hx-replace-url="true"
+      hx-select=".errorMessage"
+    >
       <label>
         Name:
         <input type="text" name="name" />

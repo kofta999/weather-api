@@ -28,14 +28,11 @@ export const BaseHtml = compile(({ children }: Html.PropsWithChildren) => (
           <a href="/signup">Signup</a>
         </li>
         <li>
-          {/* <form action="/logout" method="post">
-            {" "}
-            <button type="submit">Logout</button>
-          </form> */}
           <a
             href="#"
             hx-post="/logout"
             hx-swap="outerHTML"
+            hx-select=".errorMessage"
           >Logout</a>
         </li>
       </ul>

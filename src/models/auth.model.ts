@@ -3,12 +3,14 @@ import { Elysia, t } from "elysia";
 const passwordSchema = t.String({
   minLength: 8,
   pattern: '^(?=.*[a-z])(?=.*\\d)',
-  default: "Minimum 8 characters, at least one uppercase letter, one lowercase letter, and one digit"
+  default: "Minimum 8 characters, at least one lowercase letter, and one digit",
+  error: "Minimum 8 characters, at least one lowercase letter, and one digit"
 });
 
 const emailSchema = t.String({
   format: "email",
-  default: "Email format such as example@example.com"
+  default: "Email format such as example@example.com",
+  error: "Email format such as example@example.com"
 })
 
 export const authModel = new Elysia().model({

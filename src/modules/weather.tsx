@@ -18,8 +18,12 @@ export const weatherModule = new Elysia({ prefix: "/weather" })
   })
   .get("/city", async ({ user }) => {
     const cities = user.savedLocations;
-    const citiesData = await Promise.all(cities.map(fetchWeather));
-    return <WeatherList citiesData={citiesData} />;
+    try {
+      const citiesData = await Promise.all(cities.map(fetchWeather));
+      return <WeatherList citiesData={citiesData} />;
+    } catch {
+      throw new Error("Error happened while fetching weather data from the API.");
+    }
   })
   .post(
     "/city",
